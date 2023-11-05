@@ -1,5 +1,12 @@
+const fastify = require('fastify')({ logger: true })
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const path = require('path');
+
+fastify.register(require('@fastify/static'), {
+  root: path.join(__dirname, 'pdf'),
+  prefix: '/', // optional: default '/'
+})
 
 const Title = 'Form of Report on Services Provided'
 const Subtitle = 'Wzór sprawozdania z wykonanych obowiązków'
@@ -17,7 +24,7 @@ const activity = 'Software development'
 const fileName = 'file.pdf'
 // inputs end
 
-doc.pipe(fs.createWriteStream(`./${fileName}`));
+doc.pipe(fs.createWriteStream(`./pdf/${fileName}`));
 doc.font('Bold').text(Title, 200)
 doc.font('Regular').text(Subtitle, 200)
 doc.moveDown();
@@ -65,3 +72,20 @@ getWorkingDayPeriodsInCurrentMonth().forEach((i) => {
 
 doc.end();
 console.log('done!');
+
+fastify.get('/', (request, reply) => {
+  reply.sendFile('index.html')
+})
+
+fastify.get('/doc', function handler (request, reply) {
+  reply.header('Content-Type', 'application/pdf')
+  reply.sendFile(`${fileName}`);
+})
+
+// Run the server!
+fastify.listen({ port: 3000 }, (err) => {
+  if (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+})
