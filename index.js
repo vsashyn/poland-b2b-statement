@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 fastify.register(require('@fastify/static'), {
-  root: path.join(__dirname, 'pdf'),
+  root: path.join(__dirname, 'public'),
   prefix: '/', // optional: default '/'
 })
 
@@ -24,7 +24,7 @@ const activity = 'Software development'
 const fileName = 'file.pdf'
 // inputs end
 
-doc.pipe(fs.createWriteStream(`./pdf/${fileName}`));
+doc.pipe(fs.createWriteStream(`./public/pdf/${fileName}`));
 doc.font('Bold').text(Title, 200)
 doc.font('Regular').text(Subtitle, 200)
 doc.moveDown();
@@ -79,7 +79,7 @@ fastify.get('/', (request, reply) => {
 
 fastify.get('/doc', function handler (request, reply) {
   reply.header('Content-Type', 'application/pdf')
-  reply.sendFile(`${fileName}`);
+  reply.sendFile(`./pdf/${fileName}`);
 })
 
 // Run the server!
