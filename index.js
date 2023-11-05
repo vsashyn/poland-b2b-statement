@@ -3,11 +3,12 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 
+const PORT = process.env.PORT || 3000
+
 fastify.register(require('@fastify/static'), {
   root: path.join(__dirname, 'public'),
   prefix: '/', // optional: default '/'
 })
-
 const Title = 'Form of Report on Services Provided'
 const Subtitle = 'Wzór sprawozdania z wykonanych obowiązków'
 const DateLine = 'Date - Number of hours - Place - Activity'
@@ -83,7 +84,7 @@ fastify.get('/doc', function handler (request, reply) {
 })
 
 // Run the server!
-fastify.listen({ port: 3000 }, (err) => {
+fastify.listen({ port: PORT }, (err) => {
   if (err) {
     fastify.log.error(err)
     process.exit(1)
