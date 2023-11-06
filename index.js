@@ -1,44 +1,43 @@
 const fastify = require('fastify')({ logger: true })
 const PDFDocument = require('pdfkit');
-const fs = require('fs');
-const path = require('path');
 
 const PORT = process.env.PORT || 3000
-
-fastify.register(require('@fastify/static'), {
-  root: path.join(__dirname, 'public'),
-  prefix: '/', // optional: default '/'
-})
 const Title = 'Form of Report on Services Provided'
 const Subtitle = 'Wzór sprawozdania z wykonanych obowiązków'
 const DateLine = 'Date - Number of hours - Place - Activity'
 const DateLinePl = 'Data - Liczba godzin - Miejsce - Czynność'
 
-const doc = new PDFDocument();
-doc.registerFont('Regular', './fonts/madefor-Regular.ttf');
-doc.registerFont('Bold', './fonts/madefor-Bold.ttf');
+const generatePdfStream = () => {
+  const doc = new PDFDocument();
+  doc.registerFont('Regular', './fonts/madefor-Regular.ttf');
+  doc.registerFont('Bold', './fonts/madefor-Bold.ttf');
+  
+  // Inputs that should be provided
+  const date = new Date();
+  const location = 'Wieliczki, Zbozowa 20B, 32-020'
+  const activity = 'Software development'
+  // inputs end
+  
+  doc.font('Bold').text(Title, 200)
+  doc.font('Regular').text(Subtitle, 200)
+  doc.moveDown();
+  doc.moveDown();
+  doc.font('Bold').text(DateLine,20)
+  doc.font('Regular').text(DateLinePl)
+  doc.moveDown();
+  getWorkingDayPeriodsInCurrentMonth(date).forEach((i) => {
+    doc.text(getLineItemForPeriod(i, location, activity))
+    doc.moveDown();
+  })
+  doc.end();
+  return doc
+}
 
-// Inputs that should be provided
-const date = new Date();
-const location = 'Wieliczki, Zbozowa 20B, 32-020'
-const activity = 'Software development'
-const fileName = 'file.pdf'
-// inputs end
-
-doc.pipe(fs.createWriteStream(`./public/pdf/${fileName}`));
-doc.font('Bold').text(Title, 200)
-doc.font('Regular').text(Subtitle, 200)
-doc.moveDown();
-doc.moveDown();
-doc.font('Bold').text(DateLine,20)
-doc.font('Regular').text(DateLinePl)
-doc.moveDown();
-
-const getWorkingDayPeriodsInCurrentMonth = () => {
+const getWorkingDayPeriodsInCurrentMonth = (date) => {
   let month = date.getMonth();
   let year = date.getFullYear();
   let daysInMonth = new Date(year, month + 1, 0).getDate();
-  let workingDays = [];
+  let periods = [];
   let inteval;
   for(let day = 1; day <= daysInMonth; day++) {
       let dayOfWeek = new Date(year, month, day).getDay();
@@ -48,7 +47,7 @@ const getWorkingDayPeriodsInCurrentMonth = () => {
             inteval.push(new Date(year, month, day));
           } else {
             inteval = [];
-            workingDays.push(inteval);
+            periods.push(inteval);
             inteval.push(new Date(year, month, day));
           }
       } else {
@@ -56,31 +55,25 @@ const getWorkingDayPeriodsInCurrentMonth = () => {
       }
   }
 
-  return workingDays
+  return periods
 }
 
-const getLineItemForPeriod = (i) => {
+const getLineItemForPeriod = (i, location, activity) => {
   const from = `${i[0].getFullYear()}-${i[0].getMonth()}-${i[0].getDate()}`
   const to = `${i[i.length -1].getFullYear()}-${i[i.length -1].getMonth()}-${i[i.length -1].getDate()}`
   const hours = i.length * 8
   return `${from} - ${to} - ${hours} - ${location} - ${activity}`
 }
 
-getWorkingDayPeriodsInCurrentMonth().forEach((i) => {
-  doc.text(getLineItemForPeriod(i))
-  doc.moveDown();
-})
-
-doc.end();
-console.log('done!');
-
 fastify.get('/', (request, reply) => {
   reply.sendFile('index.html')
 })
 
 fastify.get('/doc', function handler (request, reply) {
-  reply.header('Content-Type', 'application/pdf')
-  reply.sendFile(`./pdf/${fileName}`);
+  request.log.info(request.params);
+  reply.header('Content-Type', 'application/pdf');
+  const doc = generatePdfStream(reply);
+  reply.send(doc);
 })
 
 // Run the server!
