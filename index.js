@@ -1,3 +1,4 @@
+const fs = require('fs');
 const fastify = require('fastify')({ logger: true })
 const PDFDocument = require('pdfkit');
 
@@ -66,7 +67,8 @@ const getLineItemForPeriod = (i, location, activity) => {
 }
 
 fastify.get('/', (request, reply) => {
-  reply.sendFile('index.html')
+  const f = fs.createReadStream('./public/index.html')
+  reply.send(f)
 })
 
 fastify.get('/doc', function handler (request, reply) {
