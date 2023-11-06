@@ -71,6 +71,11 @@ fastify.get('/', (request, reply) => {
   reply.send(f)
 })
 
+fastify.get('/index.js', (request, reply) => {
+  const f = fs.createReadStream('./dist/index.js')
+  reply.send(f)
+})
+
 fastify.get('/doc', function handler (request, reply) {
   request.log.info(request.params);
   reply.header('Content-Type', 'application/pdf');
