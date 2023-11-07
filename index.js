@@ -8,16 +8,14 @@ const Subtitle = 'Wzór sprawozdania z wykonanych obowiązków'
 const DateLine = 'Date - Number of hours - Place - Activity'
 const DateLinePl = 'Data - Liczba godzin - Miejsce - Czynność'
 
-const generatePdfStream = () => {
+const generatePdfStream = (date, city, address, postalCode) => {
   const doc = new PDFDocument();
   doc.registerFont('Regular', './fonts/madefor-Regular.ttf');
   doc.registerFont('Bold', './fonts/madefor-Bold.ttf');
   
-  // Inputs that should be provided
-  const date = new Date();
-  const location = 'Wieliczki, Zbozowa 20B, 32-020'
+  const location = `${city}, ${address}, ${postalCode}`;
+  // TODO: provide activity
   const activity = 'Software development'
-  // inputs end
   
   doc.font('Bold').text(Title, 200)
   doc.font('Regular').text(Subtitle, 200)
@@ -26,7 +24,7 @@ const generatePdfStream = () => {
   doc.font('Bold').text(DateLine,20)
   doc.font('Regular').text(DateLinePl)
   doc.moveDown();
-  getWorkingDayPeriodsInCurrentMonth(date).forEach((i) => {
+  getWorkingDayPeriodsInMonth(date).forEach((i) => {
     doc.text(getLineItemForPeriod(i, location, activity))
     doc.moveDown();
   })
@@ -34,7 +32,7 @@ const generatePdfStream = () => {
   return doc
 }
 
-const getWorkingDayPeriodsInCurrentMonth = (date) => {
+const getWorkingDayPeriodsInMonth = (date) => {
   let month = date.getMonth();
   let year = date.getFullYear();
   let daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -59,11 +57,20 @@ const getWorkingDayPeriodsInCurrentMonth = (date) => {
   return periods
 }
 
-const getLineItemForPeriod = (i, location, activity) => {
-  const from = `${i[0].getFullYear()}-${i[0].getMonth()}-${i[0].getDate()}`
-  const to = `${i[i.length -1].getFullYear()}-${i[i.length -1].getMonth()}-${i[i.length -1].getDate()}`
-  const hours = i.length * 8
+const getLineItemForPeriod = (arr, location, activity) => {
+  const startDate = arr[0]
+  const endDate = arr[arr.length -1]
+  const getMonth = (d) => d.getMonth() + 1 
+  const from = `${startDate.getFullYear()}-${padZero(getMonth(startDate))}-${padZero(startDate.getDate())}`
+  const to = `${endDate.getFullYear()}-${padZero(getMonth(endDate))}-${padZero(endDate.getDate())}`
+  const hours = arr.length * 8
   return `${from} - ${to} - ${hours} - ${location} - ${activity}`
+}
+const padZero = (s) => {
+  if (String(s).length < 2) {
+    return '0' + String(s);
+  }
+  return String(s)
 }
 
 fastify.get('/', (request, reply) => {
@@ -77,9 +84,12 @@ fastify.get('/index.js', (request, reply) => {
 })
 
 fastify.get('/doc', function handler (request, reply) {
-  request.log.info(request.params);
+  request.log.info(request.query);
+  const { year, month, city, address, postalCode} = request.query
   reply.header('Content-Type', 'application/pdf');
-  const doc = generatePdfStream(reply);
+  const date = new Date();
+  date.setFullYear(Number(year), Number(month), Number(1));
+  const doc = generatePdfStream(date, city, address, postalCode);
   reply.send(doc);
 })
 
