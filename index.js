@@ -83,6 +83,21 @@ fastify.get('/index.js', (request, reply) => {
   reply.send(f)
 })
 
+fastify.get('/index.js.map', (request, reply) => {
+  const f = fs.createReadStream('./dist/index.js.map')
+  reply.send(f)
+})
+
+fastify.get('/index.css', (request, reply) => {
+  const f = fs.createReadStream('./dist/index.css')
+  reply.send(f)
+})
+
+fastify.get('/index.css.map', (request, reply) => {
+  const f = fs.createReadStream('./dist/index.css.map')
+  reply.send(f)
+})
+
 fastify.get('/doc', function handler (request, reply) {
   request.log.info(request.query);
   const { year, month, city, address, postalCode} = request.query
