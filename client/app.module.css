@@ -1,21 +1,72 @@
+:root {
+  --main-color: #000;
+  --secondary-color: #000;
+  --font-size: 48px;
+}
+
 * {
   font-family: Helvetica, sans-serif;
 }
-
-select {
-  border: 2px solid lightblue;
-  width: 200px;
+h1 {
+  font-family: 'Inter', sans-serif;
+  color: var(--main-color);
+  font-size: 48px;
+  text-align: center;
+  margin: 20px 0;
+}
+input, select {
+  width: 300px;
+  padding: 12px 20px;
+  color: var(--main-color);
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid var(--main-color);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--main-color);
+  font-weight: bold;
 }
 
-input {
-  border: 2px solid lightblue;
-  width: 200px;
+input:focus, select:focus {
+  border: 1px solid #1212cd;
+  outline: none;
 }
 
-.header {
-  color: black;
+input[type=submit] {
+  background-color: var(--main-color);
+  color: white;
+  cursor: pointer;
 }
 
-.year {
-  border: 2px solid lightblue;
+input[type=submit]:hover {
+  background-color: #4433ff;
+}
+
+.btn {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  background: var(--main-color);
+  box-shadow: 0 5px #4433ff;
+}
+.btn:hover {
+  box-shadow: 0 3px #4433ff;
+  top: 1px;
+}
+.btn:active {
+  box-shadow: 0 0 #4433ff;
+  top: 5px;
 }

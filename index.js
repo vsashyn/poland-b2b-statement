@@ -88,13 +88,13 @@ fastify.get('/index.js.map', (request, reply) => {
   reply.send(f)
 })
 
-fastify.get('/index.css', (request, reply) => {
-  const f = fs.createReadStream('./dist/index.css')
+fastify.get('/app.module.css', (request, reply) => {
+  const f = fs.createReadStream('./dist/app.module.css')
   reply.send(f)
 })
 
-fastify.get('/index.css.map', (request, reply) => {
-  const f = fs.createReadStream('./dist/index.css.map')
+fastify.get('/app.module.css.map', (request, reply) => {
+  const f = fs.createReadStream('./dist/app.module.css.map')
   reply.send(f)
 })
 
