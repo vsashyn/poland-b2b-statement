@@ -1,0 +1,21 @@
+* {
+  font-family: Helvetica, sans-serif;
+}
+
+select {
+  border: 2px solid lightblue;
+  width: 200px;
+}
+
+input {
+  border: 2px solid lightblue;
+  width: 200px;
+}
+
+.header {
+  color: black;
+}
+
+.year {
+  border: 2px solid lightblue;
+}
