@@ -1,3 +1,28 @@
+.btn {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  background: var(--main-color);
+  box-shadow: 0 5px #4433ff;
+}
+.btn:hover {
+  box-shadow: 0 3px #4433ff;
+  top: 1px;
+}
+.btn:active {
+  box-shadow: 0 0 #4433ff;
+  top: 5px;
+}
+
 :root {
   --main-color: #000;
   --secondary-color: #000;
@@ -44,29 +69,4 @@ input[type=submit] {
 
 input[type=submit]:hover {
   background-color: #4433ff;
-}
-
-.btn {
-  min-width: 130px;
-  height: 40px;
-  color: #fff;
-  padding: 5px 10px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-block;
-  outline: none;
-  border-radius: 5px;
-  border: none;
-  background: var(--main-color);
-  box-shadow: 0 5px #4433ff;
-}
-.btn:hover {
-  box-shadow: 0 3px #4433ff;
-  top: 1px;
-}
-.btn:active {
-  box-shadow: 0 0 #4433ff;
-  top: 5px;
 }

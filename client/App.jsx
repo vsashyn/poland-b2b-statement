@@ -9,14 +9,13 @@ export function App() {
   const [postalCode, setPostalCode] = useState("");
   return (
     <div>
-      <h1 className={c.header}>Poland B2B statement generator</h1>
+      <h1>Poland B2B statement generator</h1>
       <div>
         <label for="year">Year:</label>
         <select
           id="year"
           value={year}
           onChange={(e) => setYear(e.target.value)}
-          className={c.year}
         >
           <option value="">Select Year</option>
           <option value="2023">2023</option>
