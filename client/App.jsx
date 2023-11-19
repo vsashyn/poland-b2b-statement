@@ -8,7 +8,7 @@ export function App() {
   const [address, setAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
   return (
-    <div>
+    <div className="main">
       <h1>Poland B2B statement generator</h1>
       <div>
         <label for="year">Year:</label>
@@ -81,6 +81,10 @@ export function App() {
       >
         Generate PDF
       </button>
+      <footer>
+        Please send bugs and feature requests to &nbsp;
+        <a href="mailto:sashyn.v@gmail.com">sashyn.v@gmail.com</a>
+      </footer>
     </div>
   );
 }
