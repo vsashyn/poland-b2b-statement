@@ -1,6 +1,13 @@
 const fs = require('fs');
 const fastify = require('fastify')({ logger: true })
 const PDFDocument = require('pdfkit');
+const path = require('path');
+
+fastify.register(require('@fastify/static'), {
+  root: path.join(__dirname, 'dist'),
+  prefix: '/',
+  // constraints: { host: 'example.com' } // optional: default {}
+})
 
 const PORT = process.env.PORT || 3000
 const Title = 'Form of Report on Services Provided'
@@ -74,27 +81,7 @@ const padZero = (s) => {
 }
 
 fastify.get('/', (request, reply) => {
-  const f = fs.createReadStream('./public/index.html')
-  reply.send(f)
-})
-
-fastify.get('/index.js', (request, reply) => {
-  const f = fs.createReadStream('./dist/index.js')
-  reply.send(f)
-})
-
-fastify.get('/index.js.map', (request, reply) => {
-  const f = fs.createReadStream('./dist/index.js.map')
-  reply.send(f)
-})
-
-fastify.get('/app.module.css', (request, reply) => {
-  const f = fs.createReadStream('./dist/app.module.css')
-  reply.send(f)
-})
-
-fastify.get('/app.module.css.map', (request, reply) => {
-  const f = fs.createReadStream('./dist/app.module.css.map')
+  const f = fs.createReadStream('./dist/index.html')
   reply.send(f)
 })
 

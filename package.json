@@ -1,16 +1,18 @@
 {
   "name": "poland-b2b-statement",
+  "source": "client/index.html",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "npx parcel watch client/* & yarn start",
-    "build": "parcel build client/index.js --dist-dir dist"
+    "dev": "parcel & yarn start",
+    "build": "parcel build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/static": "^6.12.0",
     "fastify": "^4.24.3",
     "pdfkit": "^0.13.0",
     "react": "^18.2.0",
