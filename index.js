@@ -14,7 +14,25 @@ const Subtitle = 'Wzór sprawozdania z wykonanych obowiązków'
 const DateLine = 'Date - Number of hours - Place - Activity'
 const DateLinePl = 'Data - Liczba godzin - Miejsce - Czynność'
 
-const generatePdfStream = (date, city, address, postalCode, activity) => {
+const HOLIDAYS_IN_POLAND = [
+  {month: 0, day: 6, name: 'Epiphany'},
+  {month: 3, day: 10, name: 'Easter Monday'},
+  {month: 4, day: 1, name: 'Labour Day'},
+  {month: 4, day: 3, name: 'Constitution Day'},
+  {month: 5, day: 8, name: 'Corpus Christi'},
+  {month: 7, day: 15, name: 'Assumption Day'},
+  {month: 10, day: 1, name: 'All Saints\' Day'},
+  {month: 10, day: 11, name: 'PL Independence Day'},
+  {month: 10, day: 13, name: 'PL Independence Day(moved)'},
+  {month: 11, day: 25, name: 'Christmas Day'},
+  {month: 11, day: 26, name: '2nd Day of Christmas'},
+];
+
+const isInArray = (day, month, dayOffs) => {
+  return !!dayOffs.find(h => h.day === day && h.month === month)
+}
+
+const generatePdfStream = (date, city, address, postalCode, activity, dayOffsEnhanced) => {
   const doc = new PDFDocument();
   doc.registerFont('Regular', './fonts/madefor-Regular.ttf');
   doc.registerFont('Bold', './fonts/madefor-Bold.ttf');
@@ -28,7 +46,7 @@ const generatePdfStream = (date, city, address, postalCode, activity) => {
   doc.font('Bold').text(DateLine,20)
   doc.font('Regular').text(DateLinePl)
   doc.moveDown();
-  getWorkingDayPeriodsInMonth(date).forEach((i) => {
+  getWorkingDayPeriodsInMonth(date, dayOffsEnhanced).forEach((i) => {
     doc.text(getLineItemForPeriod(i, location, activity))
     doc.moveDown();
   })
@@ -36,7 +54,7 @@ const generatePdfStream = (date, city, address, postalCode, activity) => {
   return doc
 }
 
-const getWorkingDayPeriodsInMonth = (date) => {
+const getWorkingDayPeriodsInMonth = (date, dayOffs) => {
   let month = date.getMonth();
   let year = date.getFullYear();
   let daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -44,8 +62,8 @@ const getWorkingDayPeriodsInMonth = (date) => {
   let inteval;
   for(let day = 1; day <= daysInMonth; day++) {
       let dayOfWeek = new Date(year, month, day).getDay();
-      // Monday to Friday are working days
-      if(dayOfWeek > 0 && dayOfWeek < 6) {
+      // Monday to Friday are working days + take into account custom day offs
+      if(dayOfWeek > 0 && dayOfWeek < 6 && !isInArray(day, month, dayOffs)) {
           if (Array.isArray(inteval)) {
             inteval.push(new Date(year, month, day));
           } else {
@@ -84,11 +102,12 @@ fastify.get('/', (request, reply) => {
 
 fastify.get('/doc', function handler (request, reply) {
   request.log.info(request.query);
-  const { year, month, city, address, postalCode, activity} = request.query
+  const { year, month, city, address, postalCode, activity, dayOffs} = request.query
   reply.header('Content-Type', 'application/pdf');
   const date = new Date();
   date.setFullYear(Number(year), Number(month), Number(1));
-  const doc = generatePdfStream(date, city, address, postalCode, activity);
+  const dayOffsEnhanced = dayOffs !== '' ? dayOffs.split(',').map(day => ({day: Number(day), month: date.getMonth(), name: 'Personal day off'})) : [];
+  const doc = generatePdfStream(date, city, address, postalCode, activity, dayOffsEnhanced.concat(HOLIDAYS_IN_POLAND));
   reply.send(doc);
 })
 

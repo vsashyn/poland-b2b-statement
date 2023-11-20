@@ -5,14 +5,16 @@ export function App() {
   const date = new Date();
   const [year, setYear] = useState(date.getFullYear().toString());
   const [month, setMonth] = useState(date.getMonth().toString());
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("Krakow");
   const [address, setAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [activity, setActivity] = useState("Software development");
+  const [dayOffs, setDayOffs] = useState("");
+
   return (
     <div className="main">
       <h1>Poland B2B statement generator</h1>
-      <div>
+      <div className="form_container">
         <label for="year">Year</label>
         <select
           id="year"
@@ -67,13 +69,25 @@ export function App() {
           value={postalCode}
           onChange={(e) => setPostalCode(e.target.value)}
         />
-      <label for="activity">Activity</label>
+        <label for="activity">Activity</label>
         <input
           id="activity"
           type="text"
           value={activity}
           onChange={(e) => {
             setActivity(e.target.value);
+          }}
+        />
+        <label for="dayOffs">
+          Day offs(optionally). Should be comma separated days of month
+        </label>
+        <input
+          id="dayOffs"
+          type="text"
+          value={dayOffs}
+          placeholder="1,5,21"
+          onChange={(e) => {
+            setDayOffs(e.target.value);
           }}
         />
       </div>
@@ -86,6 +100,7 @@ export function App() {
           url.append("address", address);
           url.append("postalCode", postalCode);
           url.append("activity", activity);
+          url.append("dayOffs", dayOffs);
           window.open(`./doc?${url.toString()}`);
         }}
         className={c.btn}
