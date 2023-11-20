@@ -2,8 +2,9 @@ import { useState } from "react";
 import * as c from "./app.module.css";
 
 export function App() {
-  const [year, setYear] = useState();
-  const [month, setMonth] = useState();
+  const date = new Date();
+  const [year, setYear] = useState(date.getFullYear().toString());
+  const [month, setMonth] = useState(date.getMonth().toString());
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
