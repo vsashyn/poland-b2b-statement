@@ -7,6 +7,7 @@ export function App() {
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [activity, setActivity] = useState("");
   return (
     <div className="main">
       <h1>Poland B2B statement generator</h1>
@@ -65,16 +66,25 @@ export function App() {
           value={postalCode}
           onChange={(e) => setPostalCode(e.target.value)}
         />
+      <label for="activity">Activity:</label>
+        <input
+          id="activity"
+          type="text"
+          value={activity}
+          onChange={(e) => {
+            setActivity(e.target.value);
+          }}
+        />
       </div>
       <button
         onClick={(e) => {
-          console.log(month, city, address, postalCode);
           const url = new URLSearchParams();
           url.append("year", year);
           url.append("month", month);
           url.append("city", city);
           url.append("address", address);
           url.append("postalCode", postalCode);
+          url.append("activity", activity);
           window.open(`./doc?${url.toString()}`);
         }}
         className={c.btn}

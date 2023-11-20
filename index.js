@@ -6,7 +6,6 @@ const path = require('path');
 fastify.register(require('@fastify/static'), {
   root: path.join(__dirname, 'dist'),
   prefix: '/',
-  // constraints: { host: 'example.com' } // optional: default {}
 })
 
 const PORT = process.env.PORT || 3000
@@ -15,14 +14,12 @@ const Subtitle = 'Wzór sprawozdania z wykonanych obowiązków'
 const DateLine = 'Date - Number of hours - Place - Activity'
 const DateLinePl = 'Data - Liczba godzin - Miejsce - Czynność'
 
-const generatePdfStream = (date, city, address, postalCode) => {
+const generatePdfStream = (date, city, address, postalCode, activity) => {
   const doc = new PDFDocument();
   doc.registerFont('Regular', './fonts/madefor-Regular.ttf');
   doc.registerFont('Bold', './fonts/madefor-Bold.ttf');
   
   const location = `${city}, ${address}, ${postalCode}`;
-  // TODO: provide activity
-  const activity = 'Software development'
   
   doc.font('Bold').text(Title, 200)
   doc.font('Regular').text(Subtitle, 200)
@@ -87,11 +84,11 @@ fastify.get('/', (request, reply) => {
 
 fastify.get('/doc', function handler (request, reply) {
   request.log.info(request.query);
-  const { year, month, city, address, postalCode} = request.query
+  const { year, month, city, address, postalCode, activity} = request.query
   reply.header('Content-Type', 'application/pdf');
   const date = new Date();
   date.setFullYear(Number(year), Number(month), Number(1));
-  const doc = generatePdfStream(date, city, address, postalCode);
+  const doc = generatePdfStream(date, city, address, postalCode, activity);
   reply.send(doc);
 })
 
