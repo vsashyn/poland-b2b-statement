@@ -7,12 +7,12 @@ export function App() {
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
-  const [activity, setActivity] = useState("");
+  const [activity, setActivity] = useState("Software development");
   return (
     <div className="main">
       <h1>Poland B2B statement generator</h1>
       <div>
-        <label for="year">Year:</label>
+        <label for="year">Year</label>
         <select
           id="year"
           value={year}
@@ -22,7 +22,7 @@ export function App() {
           <option value="2023">2023</option>
           <option value="2024">2024</option>
         </select>
-        <label for="month">Month:</label>
+        <label for="month">Month</label>
         <select
           id="month"
           value={month}
@@ -43,7 +43,7 @@ export function App() {
           <option value="10">November</option>
           <option value="11">December</option>
         </select>
-        <label for="city">City:</label>
+        <label for="city">City</label>
         <input
           id="city"
           type="text"
@@ -52,21 +52,21 @@ export function App() {
             setCity(e.target.value);
           }}
         />
-        <label for="address">Address:</label>
+        <label for="address">Address</label>
         <input
           id="address"
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
-        <label for="postalCode">Postal code:</label>
+        <label for="postalCode">Postal code</label>
         <input
           id="postalCode"
           type="text"
           value={postalCode}
           onChange={(e) => setPostalCode(e.target.value)}
         />
-      <label for="activity">Activity:</label>
+      <label for="activity">Activity</label>
         <input
           id="activity"
           type="text"
