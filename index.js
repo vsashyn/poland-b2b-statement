@@ -15,7 +15,8 @@ const DateLine = 'Date - Number of hours - Place - Activity'
 const DateLinePl = 'Data - Liczba godzin - Miejsce - Czynność'
 
 const HOLIDAYS_IN_POLAND = [
-  {month: 0, day: 6, name: 'Epiphany'},
+  {month: 0, day: 1, name: 'New Year`s Day'},
+  {month: 0, day: 2, name: 'Epiphany day off (transferred from January 06)'},
   {month: 3, day: 10, name: 'Easter Monday'},
   {month: 4, day: 1, name: 'Labour Day'},
   {month: 4, day: 3, name: 'Constitution Day'},
