@@ -37,8 +37,16 @@ const generatePdfStream = (date, city, address, postalCode, activity, dayOffsEnh
   const doc = new PDFDocument();
   doc.registerFont('Regular', './fonts/madefor-Regular.ttf');
   doc.registerFont('Bold', './fonts/madefor-Bold.ttf');
-  
-  const location = `${city}, ${address}, ${postalCode}`;
+  let location = '';
+  if (city !== "") {
+    location = location + city
+  }
+  if (address !== "") {
+    location = location + ', ' + address
+  }
+  if (postalCode !== "") {
+    location = location + ', ' + postalCode
+  }
   
   doc.font('Bold').text(Title, 200)
   doc.font('Regular').text(Subtitle, 200)
