@@ -29,10 +29,6 @@ const HOLIDAYS_IN_POLAND = [
   {month: 11, day: 26, name: '2nd Day of Christmas'},
 ];
 
-const isInArray = (day, month, dayOffs) => {
-  return !!dayOffs.find(h => h.day === day && h.month === month)
-}
-
 const generatePdfStream = (date, city, address, postalCode, activity, dayOffsEnhanced) => {
   const doc = new PDFDocument();
   doc.registerFont('Regular', './fonts/madefor-Regular.ttf');
@@ -72,7 +68,7 @@ const getWorkingDayPeriodsInMonth = (date, dayOffs) => {
   for(let day = 1; day <= daysInMonth; day++) {
       let dayOfWeek = new Date(year, month, day).getDay();
       // Monday to Friday are working days + take into account custom day offs
-      if(dayOfWeek > 0 && dayOfWeek < 6 && !isInArray(day, month, dayOffs)) {
+      if(dayOfWeek > 0 && dayOfWeek < 6 && !isDayInArray(day, month, dayOffs)) {
           if (Array.isArray(inteval)) {
             inteval.push(new Date(year, month, day));
           } else {
@@ -97,11 +93,16 @@ const getLineItemForPeriod = (arr, location, activity) => {
   const hours = arr.length * 8
   return `${from} - ${to} - ${hours} - ${location} - ${activity}`
 }
+
 const padZero = (s) => {
   if (String(s).length < 2) {
     return '0' + String(s);
   }
   return String(s)
+}
+
+const isDayInArray = (day, month, dayOffs) => {
+  return !!dayOffs.find(h => h.day === day && h.month === month)
 }
 
 fastify.get('/', (request, reply) => {

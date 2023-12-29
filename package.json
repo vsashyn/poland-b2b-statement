@@ -9,7 +9,7 @@
     "dev": "parcel & yarn start",
     "build": "parcel build"
   },
-  "author": "",
+  "author": "sashyn.v@gmail.com",
   "license": "ISC",
   "dependencies": {
     "@fastify/static": "^6.12.0",
